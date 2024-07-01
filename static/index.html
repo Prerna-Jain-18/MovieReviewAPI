@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Review API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .form-group textarea {
+            resize: vertical;
+            height: 100px;
+        }
+        .button-group {
+            text-align: center;
+        }
+        .button-group button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007BFF;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .button-group button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Movie Review API</h1>
+        <div class="form-group">
+            <label for="endpoint">Endpoint</label>
+            <select id="endpoint">
+                <option value="movies">/movies</option>
+                <option value="movies/:id">/movies/:id</option>
+                <option value="reviews">/reviews</option>
+                <option value="reviews/:id">/reviews/:id</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="method">HTTP Method</label>
+            <select id="method">
+                <option value="GET">GET</option>
+                <option value="POST">POST</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="data">Data (for POST)</label>
+            <textarea id="data" placeholder='{"key": "value"}'></textarea>
+        </div>
+        <div class="button-group">
+            <button onclick="sendRequest()">Send Request</button>
+        </div>
+        <div class="result" id="result"></div>
+    </div>
+    <script>
+        function sendRequest() {
+            const endpoint = document.getElementById('endpoint').value;
+            const method = document.getElementById('method').value;
+            const data = document.getElementById('data').value;
+
+            const url = endpoint.includes(':id') ? endpoint.replace(':id', prompt('Enter ID')) : endpoint;
+            const options = {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+            };
+
+            if (method === 'POST') {
+                options.body = data;
+            }
+
+            fetch(`http://127.0.0.1:5000/${url}`, options)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('result').innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                })
+                .catch(error => {
+                    document.getElementById('result').innerHTML = `<pre>${error}</pre>`;
+                });
+        }
+    </script>
+</body>
+</html>

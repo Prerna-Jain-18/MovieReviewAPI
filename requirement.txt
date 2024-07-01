@@ -1,0 +1,7 @@
+Prerequisites
+
+- Python 3.10.5
+- MySQL database
+- Flask
+- PyMySQL
+- Requests library
